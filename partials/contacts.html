@@ -1,0 +1,80 @@
+<div class="widget-box" id="recent-box" ng-controller="contactsController">
+    <div class="widget-header header-color-blue">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4 class="bigger lighter">
+                    <i class="glyphicon glyphicon-align-justify"></i>&nbsp;Contacts MANAGER
+                </h4>
+            </div>
+            <div class="col-sm-3">
+                <button ng-click="addContactModal()" class="btn btn-sm btn-danger header-elements-margin"><i class="glyphicon  glyphicon-plus"></i>&nbsp;Add New Contact</button>
+            </div>
+            <div class="col-sm-3">
+                <input type="text" ng-model="filterTask" class="form-control search header-elements-margin" placeholder="Filter Tasks">
+            </div>
+        </div>
+    </div>
+    <div class="widget-body ">
+        <form ng-init="addNewClicked=false; " ng-if="addNewClicked" id="newTaskForm" class="add-task">
+            <div class="form-actions">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="comment" ng-model="taskInput" placeholder="Add New Task" ng-focus="addNewClicked">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit" ng-click="showModal()" ><i class="glyphicon glyphicon-plus"></i>&nbsp;Add New Task</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form id="editContactForm" ng-show="!showList">
+            <div class="form-group">
+                <label for="labelFirstName">First Name</label>
+                <input type="text" class="form-control" ng-model="contact.first_name" value="{{ contact.first_name }}" placeholder="Frist Name">
+            </div>
+            <div class="form-group">
+                <label for="labelLastName">Last Name</label>
+                <input type="text" class="form-control" ng-model="contact.last_name" value="{{ contact.last_name }}" placeholder="Last Name">
+            </div>
+            <div class="form-group">
+                <label for="labelEmail">Email</label>
+                <input type="text" class="form-control" ng-model="contact.email" value="{{ contact.email }}" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <label for="labelMobile">Mobile</label>
+                <input type="text" class="form-control" ng-model="contact.mobile" value="{{ contact.mobile }}" placeholder="Mobile">
+            </div>
+            <div class="form-group">
+                <label for="labelPostCode">Post Code</label>
+                <input type="text" class="form-control" ng-model="contact.post_code" value="{{ contact.post_code }}" placeholder="Post Code">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-default" type="submit" ng-click="cancelEdit()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Cancel</button>
+                <button class="btn btn-default" type="submit" ng-click="updateContact(contact)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Update Contact</button>
+            </div>
+        </form>
+        <div class="task" id ="contactList" ng-show="showList">
+            <table class='table table-bordered table-responsive'>
+                <tr>
+                   <th>#</th>
+                   <th>First Name</th>
+                   <th>Last Name</th>
+                   <th>Mobile</th>
+                   <th>Email</th>
+                   <th>Post Code</th>
+                   <th colspan="2" align="center">Actions</th>
+                </tr>
+                <tr ng-repeat="contact in contacts">
+                    <td>{{ contact.id }}</td>
+                    <td>{{ contact.first_name }}</td>
+                    <td>{{ contact.last_name }}</td>
+                    <td>{{ contact.mobile }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td>{{ contact.post_code }}</td>
+                    <td>
+                        <a ng-click="editContact(contact)"><i class="glyphicon glyphicon-edit"></i></a>
+                        <a ng-click="showYesNo(contact.id)" class="pull-right"><i class="glyphicon glyphicon-trash"></i></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
