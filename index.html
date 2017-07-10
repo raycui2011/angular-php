@@ -3,7 +3,7 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,300,700" rel="stylesheet" type="text/css">
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" crossorigin="anonymous"></script>
+    <script src="/js/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
     <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
@@ -12,8 +12,9 @@
     <script type="text/javascript" src="app/controller/sampleapp.js"></script>
     <script type="text/javascript" src="app/controller/addcontactcontroller.js"></script>
     <script type="text/javascript" src="app/controller/deletecontactcontroller.js"></script>
+    <script type="text/javascript" src="app/services/dirPagination.js"></script>
     </head>
-    <body ng-controller="contactsController">
+    <body>
     
     <div class="navbar navbar-default" id="navbar">
     <div class="container" id="navbar-container">
@@ -35,7 +36,7 @@
 	<div class="row">
     	<div class="container">
             <blockquote><h1><a href="http://angularcode.com/simple-task-manager-application-using-angular-js-php-mysql/">Task Manager Application using Angular JS</a></h1></blockquote>
-            <div class="col-sm-9">
+            <div class="col-sm-12">
                 <div ng-include src="'partials/contacts.html'"></div>
             </div>
     	</div>

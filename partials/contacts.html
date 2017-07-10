@@ -1,7 +1,7 @@
 <div class="widget-box" id="recent-box" ng-controller="contactsController">
     <div class="widget-header header-color-blue">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <h4 class="bigger lighter">
                     <i class="glyphicon glyphicon-align-justify"></i>&nbsp;Contacts MANAGER
                 </h4>
@@ -9,22 +9,28 @@
             <div class="col-sm-3">
                 <button ng-click="addContactModal()" class="btn btn-sm btn-danger header-elements-margin"><i class="glyphicon  glyphicon-plus"></i>&nbsp;Add New Contact</button>
             </div>
-            <div class="col-sm-3">
+            
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="example-tel-input" class="col-2 col-form-label">PageSize:</label>
+                <select ng-change="change()" ng-model="entryLimit" class="form-control">
+                    <option>5</option>
+                    <option>8</option>
+                    <option>12</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="example-tel-input" class="col-2 col-form-label">Filter:</label>
                 <input type="text" ng-model="filterTask" class="form-control search header-elements-margin" placeholder="Filter Tasks">
+            </div>
+            <div class="col-md-4">
+                <h5>Showing {{ firstItem }} to {{ lastItem }} of {{ totalItems}} total customers</h5>
             </div>
         </div>
     </div>
+    
     <div class="widget-body ">
-        <form ng-init="addNewClicked=false; " ng-if="addNewClicked" id="newTaskForm" class="add-task">
-            <div class="form-actions">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="comment" ng-model="taskInput" placeholder="Add New Task" ng-focus="addNewClicked">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" type="submit" ng-click="showModal()" ><i class="glyphicon glyphicon-plus"></i>&nbsp;Add New Task</button>
-                    </div>
-                </div>
-            </div>
-        </form>
         <form id="editContactForm" ng-show="!showList">
             <div class="form-group">
                 <label for="labelFirstName">First Name</label>
@@ -51,6 +57,7 @@
                 <button class="btn btn-default" type="submit" ng-click="updateContact(contact)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Update Contact</button>
             </div>
         </form>
+        <input type="hidden" ng-value="{{currentPage}}" />
         <div class="task" id ="contactList" ng-show="showList">
             <table class='table table-bordered table-responsive'>
                 <tr>
@@ -62,8 +69,8 @@
                    <th>Post Code</th>
                    <th colspan="2" align="center">Actions</th>
                 </tr>
-                <tr ng-repeat="contact in contacts">
-                    <td>{{ contact.id }}</td>
+                <tr dir-paginate="contact in contacts | itemsPerPage: entryLimit | filter:filterTask">
+                     <td>{{ contact.id }}</td>
                     <td>{{ contact.first_name }}</td>
                     <td>{{ contact.last_name }}</td>
                     <td>{{ contact.mobile }}</td>
@@ -74,7 +81,8 @@
                         <a ng-click="showYesNo(contact.id)" class="pull-right"><i class="glyphicon glyphicon-trash"></i></a>
                     </td>
                 </tr>
-            </table>
+            </table>          
+            <dir-pagination-controls boundary-links="true" direction-links="true" on-page-change="pageChangeHandler(newPageNumber)" ></dir-pagination-controls>
         </div>
     </div>
 </div>

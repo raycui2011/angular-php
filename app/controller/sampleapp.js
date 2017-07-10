@@ -1,27 +1,46 @@
 //Define an angular module for our app
-var app = angular.module('sampleapp', ['angularModalService', 'ngAnimate']);
+var app = angular.module('sampleapp', ['angularModalService', 'ngAnimate', 'angularUtils.directives.dirPagination']);
 
 app.controller('contactsController', ['$scope','$http', 'ModalService', function($scope, $http, ModalService, $templateCache) {
   $scope.showList = true;
+  $scope.contacts = null;
+  $scope.currentPage = 1;
+  $scope.totalItems = 0;
+  $scope.entryLimit = 5;
+  $scope.firstItem = 1;
+  $scope.lastItem = 5;
   listContacts();
   
   $scope.clearCache = function() { 
     $templateCache.removeAll();
   }
-  function listContacts() {
-    console.log('it is here2');
-    $http.post("ajax/list-contacts.php").success(function(data){
+  
+  function listContacts(entryLimit) {
+    var res = $http({
+            method: 'POST',
+            url: '/ajax/list-contacts.php',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+    res.success(function(data, status, headers, config) {
+        $scope.totalItems = data.length;
         $scope.contacts = data;
-       });
+    });
+    res.error(function(data, status, headers, config) {
+        alert( "failure message: " + JSON.stringify({data: data}));
+    });
+  };
+  $scope.pageChangeHandler = function(num) {
+      $scope.currentPage = num;
+      $scope.firstItem = (num -1) * $scope.entryLimit + 1;
+      var pages = $scope.totalItems / $scope.entryLimit;
+      var maxItems = (num -1) * $scope.entryLimit + $scope.entryLimit;
+      if ($scope.totalItems > maxItems) {
+          $scope.lastItem = maxItems;
+      } else {
+          $scope.lastItem = $scope.totalItems ;
+      }
   };
   
-  /*$scope.addContact = function (task) {
-    $http.post("ajax/add-contact.php?contact="+contact).success(function(data){
-        listContacts();
-        $scope.taskInput = "";
-      });
-  };*/
-        
   $scope.addContactModal = function () {
     ModalService.showModal({
             templateUrl: '../../partials/contact-form.html',
@@ -35,6 +54,12 @@ app.controller('contactsController', ['$scope','$http', 'ModalService', function
         listContacts();
   };
   
+  $scope.test = function() {
+      console.log($scope.entryLimit);
+      listContacts($scope.entryLimit);
+  }
+
+
   $scope.showYesNo = function (id) {
     ModalService.showModal({
             templateUrl: '../../partials/delete-contact.html',
@@ -45,7 +70,6 @@ app.controller('contactsController', ['$scope','$http', 'ModalService', function
         }).then(function(modal) {
             modal.element.modal();
             modal.close.then(function(result) {
-                console.log('it is here12');
                 listContacts();
             });
         });       
@@ -78,20 +102,8 @@ app.controller('contactsController', ['$scope','$http', 'ModalService', function
   
   $scope.cancelEdit = function () {
       $scope.showList = true;
-      listContacts();
+      //listContacts();
   }
-  
-  /*$scope.deleteContact = function (task) {
-      ModalService.showModal({
-            templateUrl: '../../partials/delete-contact.html',
-            controller: "DeleteContactController",
-        }).then(function(modal) {
-            modal.element.modal();
-            modal.close.then(function(result) {
-                listContacts();
-            });
-        });
-  };*/
   
   $scope.editContact = function (contact) {
     $scope.showList = false;
@@ -105,13 +117,7 @@ app.controller('contactsController', ['$scope','$http', 'ModalService', function
         'created_at' : contact.created_at
       };
   };
-  $scope.toggleStatus = function(item, status, task) {
-    if(status=='2'){status='0';}else{status='2';}
-      $http.post("ajax/update-contact.php?taskID="+item+"&status="+status).success(function(data){
-        getTask();
-      });
-  };
-
+    
 }]);
 
 app.controller('ModalController', function($scope, close) {

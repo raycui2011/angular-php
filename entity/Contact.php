@@ -33,6 +33,7 @@ class Contact {
         return $result;
     }
     
+	
 	public function init() {
 		date_default_timezone_set("Australia/Melbourne");
 	}
@@ -105,13 +106,14 @@ class Contact {
 	return $result;
     }
 	public function listContacts() {
-		$stmt = $this->conn->prepare("select * from contact where deleted = :deleted");
+		$this->conn->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
+		$stmt = $this->conn->prepare("select * from contacts where deleted = :deleted");
 		$deleted = 0;
 		$stmt->bindParam(':deleted', $deleted);
 		$stmt->execute();
-		$result = $stmt->fetchAll();
+		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		
-		return json_encode($result);
+		return $result;
 	}
 	
     public function create($first_name, $last_name, $mobile, $email, $post_code) {
